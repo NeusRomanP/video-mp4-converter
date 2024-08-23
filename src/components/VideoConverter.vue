@@ -86,7 +86,7 @@ const downloadAll = () => {
 <style scoped>
 video {
   width: 600px;
-  max-width: 100%;
+  max-width: 90%;
   aspect-ratio: 16/9;
   background-color: black;
 }
