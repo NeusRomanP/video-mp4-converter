@@ -51,7 +51,18 @@ const convertToMp4 = async (file) => {
     await ffmpeg.writeFile(file.name, await fetchFile(file))
     message.value = "Converting..." + fileName;
     console.log("Converting..." + fileName);
-    await ffmpeg.exec(['-i', file.name, '-preset', 'ultrafast', fileName])
+    await ffmpeg.exec([
+      '-i', file.name, 
+      '-preset', 'ultrafast',
+      '-profile:v', 'baseline',
+      '-level', '3.0',
+      '-pix_fmt', 'yuv420p',
+      '-b:v', '1M',
+      '-c:a', 'aac',
+      '-b:a', '128k',
+      '-ar', '44100',
+      '-ac', '2',
+      '-movflags', '+faststart', fileName])
     message.value = "Reading...";
     console.log("reading...");
     const data = await ffmpeg.readFile(fileName);
@@ -77,5 +88,9 @@ video {
   width: 600px;
   aspect-ratio: 16/9;
   background-color: black;
+}
+
+input {
+  display: block;
 }
 </style>
