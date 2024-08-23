@@ -4,11 +4,14 @@
     <video :src="videoUrl" controls></video>
     <p>{{ message }}</p>
     <ul>
-      <li v-for="video in videos" :key="video.name">
+      <li v-for="video in videos" :key="video.url">
         <span @click="playVideo(video)">{{ video.name }}</span>
-        <a :href="video.url" :download="video.name">Download</a>
+        <a :href="video.url" :download="video.name" class="download">Download</a>
       </li>
     </ul>
+    <div v-if="videos.length">
+      <button @click="downloadAll()">Download all</button>
+    </div>
   </div>
 </template>
 
@@ -46,9 +49,9 @@ const convertToMp4 = async (file) => {
     message.value = "Writting file...";
     console.log("writting file");
     await ffmpeg.writeFile(file.name, await fetchFile(file))
-    message.value = "Executing..."+ fileName;
-    console.log("Executing..."+ fileName);
-    await ffmpeg.exec(['-i', file.name, fileName])
+    message.value = "Converting..." + fileName;
+    console.log("Converting..." + fileName);
+    await ffmpeg.exec(['-i', file.name, '-preset', 'ultrafast', fileName])
     message.value = "Reading...";
     console.log("reading...");
     const data = await ffmpeg.readFile(fileName);
@@ -59,6 +62,13 @@ const convertToMp4 = async (file) => {
 
 const playVideo = (video) => {
   videoUrl.value = video.url;
+};
+
+const downloadAll = () => {
+  const videoItems = document.querySelectorAll('a.download');
+  videoItems.forEach(videoItem => {
+    videoItem.click();
+  });
 };
 </script>
 
