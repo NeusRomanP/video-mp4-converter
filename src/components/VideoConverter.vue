@@ -99,7 +99,16 @@ const downloadAll = () => {
 
 <style scoped>
 h1 span{
-  color: var(--primary-color, #04baab);
+  font-size: 3rem;
+  color: var(--primary-color, black);
+  text-shadow: 1px 0 var(--primary-color, #04baab), 
+               -1px 0 var(--primary-color, #04baab),
+               0 1px var(--primary-color, #04baab), 
+               0 -1px var(--primary-color, #04baab),
+               1px 1px var(--primary-color, #04baab), 
+               -1px -1px var(--primary-color, #04baab), 
+               1px -1px var(--primary-color, #04baab), 
+               -1px 1px var(--primary-color, #04baab);
 }
 
 main {
