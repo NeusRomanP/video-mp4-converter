@@ -47,42 +47,34 @@ const handleFileChange = async (event) => {
       });
     }
     message.value = "Done!";
-    console.log("done");
   } else {
     labelMsg.value = "No video has been selected"
   }
 };
 
 const convertToMp4 = async (file) => {
-  const ext2Convert = ['avi', 'mpg'];
   const ffmpeg = new FFmpeg({ log: true });
   message.value = "Loading...";
   await ffmpeg.load();
   const fileName = file.name.split('.').slice(0, -1).join('') + '.mp4';
-  if (ext2Convert.includes(file.name.split('.').pop().toLowerCase())) {
-    message.value = "Writting file...";
-    console.log("writting file");
-    await ffmpeg.writeFile(file.name, await fetchFile(file))
-    message.value = "Converting..." + fileName;
-    console.log("Converting..." + fileName);
-    await ffmpeg.exec([
-      '-i', file.name, 
-      '-preset', 'ultrafast',
-      '-profile:v', 'baseline',
-      '-level', '3.0',
-      '-pix_fmt', 'yuv420p',
-      '-b:v', '1M',
-      '-c:a', 'aac',
-      '-b:a', '128k',
-      '-ar', '44100',
-      '-ac', '2',
-      '-movflags', '+faststart', fileName])
-    message.value = "Reading...";
-    console.log("reading...");
-    const data = await ffmpeg.readFile(fileName);
-    return [new Blob([data.buffer], { type: 'video/mp4' }), fileName];
-  }
-  return [file, file.name];
+  message.value = "Writting file...";
+  await ffmpeg.writeFile(file.name, await fetchFile(file))
+  message.value = "Converting..." + fileName;
+  await ffmpeg.exec([
+    '-i', file.name, 
+    '-preset', 'ultrafast',
+    '-profile:v', 'baseline',
+    '-level', '3.0',
+    '-pix_fmt', 'yuv420p',
+    '-b:v', '1M',
+    '-c:a', 'aac',
+    '-b:a', '128k',
+    '-ar', '44100',
+    '-ac', '2',
+    '-movflags', '+faststart', fileName])
+  message.value = "Reading...";
+  const data = await ffmpeg.readFile(fileName);
+  return [new Blob([data.buffer], { type: 'video/mp4' }), fileName];
 };
 
 const playVideo = (video) => {
@@ -208,5 +200,10 @@ ul.videos li .name:hover {
   border: 1px solid var(--primary-color, #04baab);
   color: var(--primary-color, #04baab);
   box-shadow: 0 0 5px white;
+  cursor: pointer;
+}
+
+.download-all {
+  margin-bottom: 16px;
 }
 </style>
