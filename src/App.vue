@@ -9,5 +9,13 @@ import VideoConverter from './components/VideoConverter.vue';
 </script>
 
 <style>
-/* Añade tu CSS global aquí */
+:root {
+  --prmary-color: #04baab;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #151515;
+  color: #F2F2F2;
+}
 </style>
