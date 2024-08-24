@@ -90,6 +90,11 @@ const downloadAll = () => {
 </script>
 
 <style scoped>
+
+h1 {
+  text-align: center;
+}
+
 h1 span{
   font-size: 3rem;
   color: var(--primary-color, black);
