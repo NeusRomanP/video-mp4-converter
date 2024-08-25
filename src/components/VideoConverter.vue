@@ -4,11 +4,14 @@
     <div class="video-input__container">
       <input type="file" @change="handleFileChange" 
              accept="video/*" id="file-input" multiple />
-      <label for="file-input" class="file-label">
-        <font-awesome-icon :icon="['fas', 'plus']" />
+      <label for="file-input" class="file-label drop-zone"
+             @dragover.prevent="handleDragOver"
+             @dragleave="handleDragLeave"
+             @drop.prevent="handleDrop">
+        <font-awesome-icon :icon="['fas', 'plus']" class="icon"/>
         <span>Select videos</span>
       </label>
-      <span class="file-name">{{ labelMsg }}</span>
+      <span class="label-msg">{{ labelMsg }}</span>
     </div>
     <div v-if="videoUrl" class="current-video__container">
       <video :src="videoUrl" controls></video>
@@ -40,13 +43,49 @@ const labelMsg = ref("No video has been selected");
 const percent = ref(0);
 const isProgress = ref(false);
 const videos = ref([]);
+
+const handleDragOver = () => {
+  document.querySelector('.drop-zone').classList.add('dragover');
+};
+
+const handleDragLeave = () => {
+  document.querySelector('.drop-zone').classList.remove('dragover');
+};
+
+const handleDrop = (event) => {
+  document.querySelector('.drop-zone').classList.remove('dragover');
+  const droppedFiles = event.dataTransfer.files;
+  updateFileInput(droppedFiles);
+};
+
+const updateFileInput = (fileList) => {
+  const dataTransfer = new DataTransfer();
+  const inputFile = document.getElementById('file-input');
+  Array.from(fileList).forEach(file => dataTransfer.items.add(file));
+  inputFile.files = dataTransfer.files;
+  handleFileChange({ target: { files: dataTransfer.files } });
+};
+
+const isVideo = (file) => {
+  return file.type.startsWith('video/');
+};
+
 const handleFileChange = async (event) => {
   const files = event.target.files;
   if (files.length > 0) {
-    labelMsg.value = files.length === 1
-      ? "1 video has been selected"
-      : `${files.length} videos have been selected`;
+    let videosNum = 0;
+    let videoFiles = [];
     for (const file of files) {
+      if (isVideo(file)) {
+        videoFiles.push(file)
+        videosNum++;
+      }
+    }
+    labelMsg.value = videoFiles.length === 1
+      ? "1 video has been selected"
+      : `${videosNum} videos have been selected`;
+
+    for (const file of videoFiles) {
       const [convertedFile, fileName] = await convertToMp4(file);
       videos.value.push({
         file: convertedFile,
@@ -57,9 +96,13 @@ const handleFileChange = async (event) => {
         playVideo(videos.value[0]);
       }
     }
-    message.value = "Done!";
+    if (videos.value.length) {
+      message.value = "Done!";
+    } else {
+      labelMsg.value = "No video has been selected";
+    }
   } else {
-    labelMsg.value = "No video has been selected"
+    labelMsg.value = "No video has been selected";
   }
 };
 
@@ -148,10 +191,16 @@ video {
 }
 
 .video-input__container {
-  padding: 16px;
+  padding-block: 16px;
+  max-width: 80%;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 8px;
+}
+
+.video-input__container .label-msg {
+  text-align: center;
 }
 
 #file-input {
@@ -160,7 +209,7 @@ video {
 
 .file-label {
   display: inline-block;
-  padding: 8px;
+  padding: 32px;
   background-color: #333;
   border: 1px solid white;
   border-radius: 8px;
@@ -171,6 +220,22 @@ video {
   border: 1px solid var(--primary-color, #04baab);
   color: var(--primary-color, #04baab);
   cursor: pointer;
+}
+
+.drop-zone {
+  display: flex;
+  flex-direction: column;
+  width: 600px;
+  max-width: 80%;
+}
+
+.drop-zone.dragover {
+  opacity: 0.5;
+}
+
+.drop-zone .icon {
+  font-size: 2rem;
+  padding: 8px;
 }
 
 progress {
