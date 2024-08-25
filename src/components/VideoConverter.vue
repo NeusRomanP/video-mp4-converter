@@ -7,7 +7,7 @@
       <label for="file-input" class="file-label">Select videos</label>
       <span class="file-name">{{ labelMsg }}</span>
     </div>
-    <div class="current-video__container">
+    <div v-if="videoUrl" class="current-video__container">
       <video :src="videoUrl" controls></video>
     </div>
     <p>{{ message }}</p>
@@ -45,6 +45,9 @@ const handleFileChange = async (event) => {
         name: fileName,
         url: URL.createObjectURL(convertedFile)
       });
+      if (videos.value.length && !videoUrl.value) {
+        playVideo(videos.value[0]);
+      }
     }
     message.value = "Done!";
   } else {
@@ -120,7 +123,6 @@ video {
   aspect-ratio: 16/9;
   background-color: black;
   border-radius: 8px;
-  box-shadow: 0 0 10px white;
 }
 
 .current-video__container {
@@ -143,14 +145,13 @@ video {
 .file-label {
   display: inline-block;
   padding: 8px;
-  background-color: black;
+  background-color: #333;
   border: 1px solid white;
   border-radius: 8px;
   text-align: center;
 }
 
 .file-label:hover {
-  box-shadow: 0 0 5px white;
   border: 1px solid var(--primary-color, #04baab);
   color: var(--primary-color, #04baab);
   cursor: pointer;
@@ -170,9 +171,8 @@ ul.videos li {
   justify-content: space-between;
   list-style: none;
   padding: 16px;
-  background-color: black;
+  background-color: #333;
   border: 2px solid white;
-  box-shadow: 0 0 5px white;
   color: white;
   border-radius: 4px;
 }
@@ -193,7 +193,7 @@ ul.videos li .name:hover {
 .download-all button {
   display: inline-block;
   padding: 8px 16px;
-  background-color: black;
+  background-color: #333;
   color: white;
   border: 1px solid white;
   border-radius: 8px;
@@ -204,7 +204,6 @@ ul.videos li .name:hover {
 .download-all button:hover {
   border: 1px solid var(--primary-color, #04baab);
   color: var(--primary-color, #04baab);
-  box-shadow: 0 0 5px white;
   cursor: pointer;
 }
 
