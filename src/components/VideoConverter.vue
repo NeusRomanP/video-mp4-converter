@@ -11,6 +11,7 @@
       <video :src="videoUrl" controls></video>
     </div>
     <p>{{ message }}</p>
+    <progress v-if="isProgress" max="100" :value="percent"></progress>
     <ul class="videos">
       <li v-for="video in videos" :key="video.url">
         <span @click="playVideo(video)" class="name">{{ video.name }}</span>
@@ -31,7 +32,9 @@ import { FFmpeg } from '@ffmpeg/ffmpeg';
 const videoUrl = ref(null);
 const message = ref("");
 const labelMsg = ref("No video has been selected");
-let videos = ref([]);
+const percent = ref(0);
+const isProgress = ref(false);
+const videos = ref([]);
 const handleFileChange = async (event) => {
   const files = event.target.files;
   if (files.length > 0) {
@@ -63,6 +66,13 @@ const convertToMp4 = async (file) => {
   message.value = "Writting file...";
   await ffmpeg.writeFile(file.name, await fetchFile(file))
   message.value = "Converting..." + fileName;
+
+  isProgress.value = true;
+  ffmpeg.on('progress', (progress) => {
+    percent.value = progress.progress * 100 > 100
+      ? 100 : Math.floor(progress.progress * 100);
+  });
+
   await ffmpeg.exec([
     '-i', file.name, 
     '-preset', 'ultrafast',
@@ -77,6 +87,7 @@ const convertToMp4 = async (file) => {
     '-movflags', '+faststart', fileName])
   message.value = "Reading...";
   const data = await ffmpeg.readFile(fileName);
+  isProgress.value = false;
   return [new Blob([data.buffer], { type: 'video/mp4' }), fileName];
 };
 
@@ -155,6 +166,24 @@ video {
   border: 1px solid var(--primary-color, #04baab);
   color: var(--primary-color, #04baab);
   cursor: pointer;
+}
+
+progress {
+  background-color: #333;
+  border: 1px solid white;
+  border-radius: 6px;
+  height: 12px;
+  overflow: hidden;
+}
+
+progress::-webkit-progress-value {
+  background: var(--primary-color, #04baab);
+  border-radius: 6px;
+}
+
+progress::-webkit-progress-bar {
+  background: #333;
+  border-radius: 6px;
 }
 
 ul.videos {
