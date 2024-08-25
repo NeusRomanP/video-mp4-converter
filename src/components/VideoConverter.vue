@@ -4,7 +4,10 @@
     <div class="video-input__container">
       <input type="file" @change="handleFileChange" 
              accept="video/*" id="file-input" multiple />
-      <label for="file-input" class="file-label">Select videos</label>
+      <label for="file-input" class="file-label">
+        <font-awesome-icon :icon="['fas', 'plus']" />
+        <span>Select videos</span>
+      </label>
       <span class="file-name">{{ labelMsg }}</span>
     </div>
     <div v-if="videoUrl" class="current-video__container">
@@ -15,7 +18,9 @@
     <ul class="videos">
       <li v-for="video in videos" :key="video.url">
         <span @click="playVideo(video)" class="name">{{ video.name }}</span>
-        <a :href="video.url" :download="video.name" class="download">Download</a>
+        <a :href="video.url" :download="video.name" class="download">
+          <font-awesome-icon :icon="['fas', 'download']" />
+        </a>
       </li>
     </ul>
     <div v-if="videos.length" class="download-all">
@@ -213,6 +218,7 @@ ul.videos li .name:hover {
 
 .videos a.download {
   color: white;
+  text-decoration: none;
 }
 
 .videos a.download:hover {
