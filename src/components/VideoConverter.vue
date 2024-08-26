@@ -64,7 +64,6 @@ const handleDragLeave = () => {
 const handleDrop = (event) => {
   document.querySelector('.drop-zone').classList.remove('dragover');
   inputText.value = "Select videos";
-  console.log('drop')
   const droppedFiles = event.dataTransfer.files;
   updateFileInput(droppedFiles);
 };
