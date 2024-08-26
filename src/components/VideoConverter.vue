@@ -7,9 +7,10 @@
       <label for="file-input" class="file-label drop-zone"
              @dragover.prevent="handleDragOver"
              @dragleave="handleDragLeave"
+             @dragenter="handleDragEnter"
              @drop.prevent="handleDrop">
         <font-awesome-icon :icon="['fas', 'plus']" class="icon"/>
-        <span>Select videos</span>
+        <span>{{ inputText }}</span>
       </label>
       <span class="label-msg">{{ labelMsg }}</span>
     </div>
@@ -43,17 +44,27 @@ const labelMsg = ref("No video has been selected");
 const percent = ref(0);
 const isProgress = ref(false);
 const videos = ref([]);
+const inputText = ref("Select videos");
+const dragCounter = ref(0);
 
-const handleDragOver = () => {
+const handleDragEnter = () => {
+  dragCounter.value++;
   document.querySelector('.drop-zone').classList.add('dragover');
+  inputText.value = "Drop videos";
 };
 
 const handleDragLeave = () => {
-  document.querySelector('.drop-zone').classList.remove('dragover');
+  dragCounter.value--;
+  if (dragCounter.value === 0) {
+    document.querySelector('.drop-zone').classList.remove('dragover');
+    inputText.value = "Select videos";
+  }
 };
 
 const handleDrop = (event) => {
   document.querySelector('.drop-zone').classList.remove('dragover');
+  inputText.value = "Select videos";
+  console.log('drop')
   const droppedFiles = event.dataTransfer.files;
   updateFileInput(droppedFiles);
 };
@@ -230,7 +241,9 @@ video {
 }
 
 .drop-zone.dragover {
-  opacity: 0.5;
+  border: 1px solid var(--primary-color, #04baab);
+  color: var(--primary-color, #04baab);
+  opacity: 0.7;
 }
 
 .drop-zone .icon {
