@@ -244,14 +244,17 @@ main {
   aspect-ratio: 1;
   padding: 3px;
   border-radius: 50%;
+  cursor: pointer;
 }
 
 .theme-switcher label.dark {
-  background-color: var(--switcher-color-dark, transparent);
+  background-color: var(--bg-color-secondary);
+  color: var(--color);
 }
 
 .theme-switcher label.light {
-  background-color: var(--switcher-color-light, transparent);
+  background-color: var(--bg-color-secondary);
+  color: var(--color);
 }
 
 video {
@@ -393,13 +396,15 @@ ul.videos li .name:hover {
 
 @media (prefers-color-scheme: dark) {
   .theme-switcher label.dark {
-    background-color: var(--switcher-color-dark, var(--primary-color));
+    background-color: var(--bg-color-secondary);
+    color: var(--color);
   }
 }
 
 @media (prefers-color-scheme: light) {
   .theme-switcher label.light {
-    background-color: var(--switcher-color-light, var(--primary-color));
+    background-color: var(--bg-color-secondary);
+    color: var(--color);
   }
 }
 </style>

@@ -18,12 +18,10 @@ import VideoConverter from './components/VideoConverter.vue';
   &:has(input[name="color-scheme"][class="light"]:checked) {
     color-scheme: light;
     --switcher-color-light: var(--primary-color);
-    --switcher-color-dark: transparent;
   }
   &:has(input[name="color-scheme"][class="dark"]:checked) {
     color-scheme: dark;
     --switcher-color-dark: var(--primary-color);
-    --switcher-color-light: transparent;
   }
 }
 
