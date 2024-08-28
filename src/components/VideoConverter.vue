@@ -3,16 +3,11 @@
     <h1>Convert your videos to <span>MP4</span></h1>
     <div class="theme-switcher">
       <div>
-        <label for="color-scheme-light" class="light">
-          <font-awesome-icon :icon="['fas', 'sun']" class="icon"/>
+        <label for="color-scheme" :class="colorScheme">
+          <font-awesome-icon :icon="['fas', colorSchemeIcon]" class="icon"/>
         </label>
-        <input type="radio" name="color-scheme" id="color-scheme-light" value="light">
-      </div>
-      <div>
-        <label for="color-scheme-dark" class="dark">
-          <font-awesome-icon :icon="['fas', 'moon']" class="icon"/>
-        </label>
-        <input type="radio" name="color-scheme" id="color-scheme-dark" value="dark">
+        <input type="checkbox" name="color-scheme" :class="colorScheme"
+               id="color-scheme" @click="switchColorScheme">
       </div>
     </div>
     <div class="video-input__container">
@@ -60,6 +55,37 @@ const isProgress = ref(false);
 const videos = ref([]);
 const inputText = ref("Select videos");
 const dragCounter = ref(0);
+
+const colorScheme = ref(window.matchMedia("(prefers-color-scheme: dark)").matches ? 'dark' : 'light');
+colorScheme.value = localStorage.getItem('theme') ? localStorage.getItem('theme') : colorScheme.value;
+const otherColorScheme = ref(colorScheme.value === 'dark' ? 'light' : 'dark');
+const colorSchemeIcon = ref(colorScheme.value === 'dark' ? 'sun' : 'moon');
+const html = document.querySelector('html');
+
+
+console.log(colorScheme.value)
+html.classList.remove(otherColorScheme.value);
+html.classList.add(colorScheme.value);
+
+const switchColorScheme = () => {
+  let value = colorScheme.value;
+  html.classList.remove(value);
+  html.classList.add(otherColorScheme.value);
+
+  if (value !== 'light' && value !== 'dark') {
+    if (localStorage.getItem('theme')) {
+      colorScheme.value = localStorage.getItem('theme') === 'dark' ? 'light' : 'dark';
+    } else {
+      colorScheme.value = window.matchMedia("(prefers-color-scheme: dark)").matches ? 'light' : 'dark';
+    }
+  } else {
+    colorScheme.value = value === 'dark' ? 'light' : 'dark';
+  }
+
+  otherColorScheme.value = value;
+  colorSchemeIcon.value = value === 'dark' ? 'moon' : 'sun';
+  localStorage.setItem('theme', colorScheme.value);
+}
 
 const handleDragEnter = () => {
   dragCounter.value++;

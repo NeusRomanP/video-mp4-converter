@@ -15,16 +15,24 @@ import VideoConverter from './components/VideoConverter.vue';
   --bg-color: light-dark(#F2F2F2, #151515);
   --bg-color-secondary: light-dark(#ccc, #333);
   --color: light-dark(black, white);
-  &:has(input[name="color-scheme"][value="light"]:checked) {
+  &:has(input[name="color-scheme"][class="light"]:checked) {
     color-scheme: light;
     --switcher-color-light: var(--primary-color);
     --switcher-color-dark: transparent;
   }
-  &:has(input[name="color-scheme"][value="dark"]:checked) {
+  &:has(input[name="color-scheme"][class="dark"]:checked) {
     color-scheme: dark;
     --switcher-color-dark: var(--primary-color);
     --switcher-color-light: transparent;
   }
+}
+
+:root.light {
+  color-scheme: light;
+}
+
+:root.dark {
+  color-scheme: dark;
 }
 
 
