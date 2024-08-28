@@ -1,6 +1,20 @@
 <template>
   <main>
     <h1>Convert your videos to <span>MP4</span></h1>
+    <div class="theme-switcher">
+      <div>
+        <label for="color-scheme-light" class="light">
+          <font-awesome-icon :icon="['fas', 'sun']" class="icon"/>
+        </label>
+        <input type="radio" name="color-scheme" id="color-scheme-light" value="light">
+      </div>
+      <div>
+        <label for="color-scheme-dark" class="dark">
+          <font-awesome-icon :icon="['fas', 'moon']" class="icon"/>
+        </label>
+        <input type="radio" name="color-scheme" id="color-scheme-dark" value="dark">
+      </div>
+    </div>
     <div class="video-input__container">
       <input type="file" @change="handleFileChange" 
              accept="video/*" id="file-input" multiple />
@@ -169,7 +183,7 @@ h1 {
 
 h1 span{
   font-size: 3rem;
-  color: var(--primary-color, black);
+  color: var(--bg-color);
   text-shadow: 1px 0 var(--primary-color, #04baab), 
                -1px 0 var(--primary-color, #04baab),
                0 1px var(--primary-color, #04baab), 
@@ -184,6 +198,34 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.theme-switcher {
+  background-color: var(--bg-color-secondary);
+  border-radius: .5rem;
+  display: flex;
+  gap: 8px;
+}
+
+.theme-switcher input {
+  display: none;
+}
+
+.theme-switcher label {
+  display: flex;
+  justify-content: center;
+  width: 16px;
+  aspect-ratio: 1;
+  padding: 3px;
+  border-radius: 50%;
+}
+
+.theme-switcher label.dark {
+  background-color: var(--switcher-color-dark, transparent);
+}
+
+.theme-switcher label.light {
+  background-color: var(--switcher-color-light, transparent);
 }
 
 video {
@@ -220,8 +262,8 @@ video {
 .file-label {
   display: inline-block;
   padding: 32px;
-  background-color: #333;
-  border: 1px solid white;
+  background-color: var(--bg-color-secondary);
+  border: 1px solid var(--color);
   border-radius: 8px;
   text-align: center;
 }
@@ -251,8 +293,8 @@ video {
 }
 
 progress {
-  background-color: #333;
-  border: 1px solid white;
+  background-color: var(--bg-color-secondary);
+  border: 1px solid var(--color);
   border-radius: 6px;
   height: 12px;
   overflow: hidden;
@@ -264,7 +306,7 @@ progress::-webkit-progress-value {
 }
 
 progress::-webkit-progress-bar {
-  background: #333;
+  background: var(--bg-color-secondary);
   border-radius: 6px;
 }
 
@@ -282,9 +324,9 @@ ul.videos li {
   justify-content: space-between;
   list-style: none;
   padding: 16px;
-  background-color: #333;
-  border: 2px solid white;
-  color: white;
+  background-color: var(--bg-color-secondary);
+  border: 2px solid var(--color);
+  color: var(--color);
   border-radius: 4px;
 }
 
@@ -294,7 +336,7 @@ ul.videos li .name:hover {
 }
 
 .videos a.download {
-  color: white;
+  color: var(--color);
   text-decoration: none;
 }
 
@@ -305,9 +347,9 @@ ul.videos li .name:hover {
 .download-all button {
   display: inline-block;
   padding: 8px 16px;
-  background-color: #333;
-  color: white;
-  border: 1px solid white;
+  background-color: var(--bg-color-secondary);
+  color: var(--color);
+  border: 1px solid var(--color);
   border-radius: 8px;
   text-align: center;
   font-size: 1rem;
@@ -321,5 +363,17 @@ ul.videos li .name:hover {
 
 .download-all {
   margin-bottom: 16px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .theme-switcher label.dark {
+    background-color: var(--switcher-color-dark, var(--primary-color));
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .theme-switcher label.light {
+    background-color: var(--switcher-color-light, var(--primary-color));
+  }
 }
 </style>
